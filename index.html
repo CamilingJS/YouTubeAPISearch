@@ -32,36 +32,48 @@
   </style>
 </head>
 <body>
-  <input id="search-bar" placeholder="Search" type="text">
+  <form id="search-form">
+    <input id="search-bar" placeholder="Search" type="text">
+  </form>
   <div id="video-divs"></div>
   <script>
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          // Typical action to be performed when the document is ready:
-          const res = JSON.parse(xhttp.responseText);
-          const videoData = res.items.map(function(item){
-            return item.snippet
-          })
+    const searchForm = document.querySelector('#search-form')
+    searchForm.addEventListener('submit', function(e){
+      e.preventDefault()
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              // Typical action to be performed when the document is ready:
+              const res = JSON.parse(xhttp.responseText);
+              const videoData = res.items.map(function(item){
+                return item.snippet
+              })
 
-          let container = document.querySelector('#video-divs');
-          videoData.forEach(function(video){
-            console.log(video)
-            let videoDiv = document.createElement('div')
-            videoDiv.classList.add('video-div')
-            videoDiv.innerHTML = `
-              <img height=200 src=${video.thumbnails.high.url}>
-              <h4>${video.title}</h4>
-              <p>${video.channelTitle}</p>
-              <p>${new Date(video.publishTime).toLocaleDateString()}</p>
-            `;
-            container.appendChild(videoDiv)
-          })
+              let container = document.querySelector('#video-divs');
+              container.innerHTML = '';
+              videoData.forEach(function(video){
+                console.log(video)
+                let videoDiv = document.createElement('div')
+                videoDiv.classList.add('video-div')
+                videoDiv.innerHTML = `
+                  <img height=200 src=${video.thumbnails.high.url}>
+                  <h4>${video.title}</h4>
+                  <p>${video.channelTitle}</p>
+                  <p>${new Date(video.publishTime).toLocaleDateString()}</p>
+                `;
+                container.appendChild(videoDiv)
+              })
 
-        }
-    };
-    xhttp.open("GET", "https://www.googleapis.com/youtube/v3/search?part=snippet&order=rating&type=video&videoDefinition=high&videoEmbeddable=true&key=AIzaSyCvZ635_IB1QjUt5jzX1r-ZRVr1zgixQe4", true);
-    xhttp.send();
+            }
+        };
+            const textValue = document.querySelector('#search-bar').value
+            // xhttp.open("GET", `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${textValue}&order=rating&type=video&videoDefinition=high&videoEmbeddable=true&maxResults=10&key=AIzaSyCvZ635_IB1QjUt5jzX1r-ZRVr1zgixQe4`, true);
+            // xhttp.send();
+            xhttp.open("GET", `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${textValue}&maxResults=9&key=AIzaSyD__xp_1OfaDNZgHmFFW2FHijdQrk00p90`, true);
+            xhttp.send();
+    })
+    
+    
   </script>
 </body>
 </html>
