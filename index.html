@@ -5,9 +5,34 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YouTube Search App</title>
+  <style>
+    * {
+      margin: 5px 0; 
+    }
+    body {
+      text-align: center;
+    }
+    #search-bar {
+      width: 40%;
+      height: 30px;
+      margin: 30px 0; 
+    }
+    #video-divs {
+      display: flex;
+      flex-wrap: wrap;
+      text-align: left;
+    }
+    .video-div {
+      width: 33%; 
+      margin: 2% 2%; 
+    }
+    img {
+      width: 80%;
+    }
+  </style>
 </head>
 <body>
-  <input placeholder="Search" type="text">
+  <input id="search-bar" placeholder="Search" type="text">
   <div id="video-divs"></div>
   <script>
     var xhttp = new XMLHttpRequest();
@@ -23,10 +48,12 @@
           videoData.forEach(function(video){
             console.log(video)
             let videoDiv = document.createElement('div')
+            videoDiv.classList.add('video-div')
             videoDiv.innerHTML = `
-              <img src=${video.thumbnails.default.url}>
+              <img height=200 src=${video.thumbnails.high.url}>
               <h4>${video.title}</h4>
               <p>${video.channelTitle}</p>
+              <p>${new Date(video.publishTime).toLocaleDateString()}</p>
             `;
             container.appendChild(videoDiv)
           })
